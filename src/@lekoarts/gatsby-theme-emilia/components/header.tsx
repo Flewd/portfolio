@@ -2,17 +2,18 @@
 import { jsx, Heading, Flex } from "theme-ui"
 import { animated, useSpring, config } from "react-spring"
 import { useStaticQuery, graphql } from "gatsby"
-import Img from "gatsby-image"
+import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 import useEmiliaConfig from "../hooks/use-emilia-config"
 import HeaderBackground from "./header-background"
-import Location from "../assets/location"
 import SocialMediaList from "./social-media-list"
-import { ChildImageSharpFixed } from "../types"
-import AboutMeMDX from "../texts/about-me"
+import Svg from "./svg"
+import AboutMeMDX from "../texts/about-me.mdx"
 
 type AvatarStaticQuery = {
   file: {
-    childImageSharp: ChildImageSharpFixed
+    childImageSharp: {
+      gatsbyImageData: IGatsbyImageData
+    }
   }
 }
 
@@ -22,9 +23,7 @@ const Header = () => {
     query {
       file(name: { eq: "avatar" }) {
         childImageSharp {
-          fixed(width: 140, height: 140, quality: 100) {
-            ...GatsbyImageSharpFixed_withWebp
-          }
+          gatsbyImageData(layout: FIXED, width: 140, height: 140, quality: 100)
         }
       }
     }
@@ -63,8 +62,8 @@ const Header = () => {
               },
             }}
           >
-            {avatar?.file?.childImageSharp?.fixed ? (
-              <Img fixed={avatar.file.childImageSharp.fixed} />
+            {avatar?.file?.childImageSharp?.gatsbyImageData ? (
+              <GatsbyImage image={avatar.file.childImageSharp.gatsbyImageData} alt="Avatar" />
             ) : (
               <div
                 sx={{
@@ -92,26 +91,29 @@ const Header = () => {
         <animated.div style={fadeUpPropsDelay}>
           <Flex
             sx={{
-              svg: {
-                width: `20px`,
-                height: `20px`,
-                ".primary": { color: `iconPrimary` },
-                ".secondary": { color: `iconSecondary` },
-                mr: 2,
-              },
               justifyContent: `center`,
               alignItems: `center`,
               color: `text`,
             }}
           >
-            {/* <Location /> {location} */}
+            <Svg
+              id="location"
+              width="20px"
+              height="20px"
+              sx={{
+                color: `iconPrimary`,
+                mr: 2,
+              }}
+            />
+            {` `}
+            {location}
           </Flex>
+          <AboutMeMDX />
         </animated.div>
-        <div data-testid="social-header" style={{maxWidth:'55em'}} sx={{ mt: 4, mb: 6, a: { mx: 2 } }}>
+        <div data-testid="social-header" sx={{ mt: 4, mb: 6, a: { mx: 2 } }}>
           <animated.div style={fadeLongProps}>
             <SocialMediaList />
           </animated.div>
-          <AboutMeMDX />
         </div>
       </div>
     </Flex>

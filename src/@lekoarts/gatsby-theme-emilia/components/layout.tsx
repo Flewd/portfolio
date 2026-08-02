@@ -1,51 +1,27 @@
-import React from "react"
-import { Global } from "@emotion/core"
+import * as React from "react"
+import { get } from "theme-ui"
+import { Global } from "@emotion/react"
 import Footer from "./footer"
-import SEO from "./seo"
-
-import { MDXProvider } from "@mdx-js/react"
-import VideoHeader from "./video-header"
-import ImageHeader from "./image-header"
-
-const shortcodes = { VideoHeader, ImageHeader }
 
 type LayoutProps = { children: React.ReactNode }
 
 const Layout = ({ children }: LayoutProps) => (
   <React.Fragment>
-   
     <Global
-      styles={(theme) => ({
+      styles={(t) => ({
         "*": {
           boxSizing: `inherit`,
-        },
-        html: {
-          fontSize: `18px`,
-          WebkitTextSizeAdjust: `100%`,
-        },
-        img: {
-          borderStyle: `none`,
-        },
-        pre: {
-          fontFamily: `monospace`,
-          fontSize: `1em`,
         },
         "[hidden]": {
           display: `none`,
         },
         "::selection": {
-          background: theme.colors.text,
-          color: theme.colors.background,
-        },
-        "@media(max-width: 600px)": {
-          html: {
-            fontSize: `16px`,
-          },
+          background: get(t, `colors.text`),
+          color: get(t, `colors.background`),
         },
       })}
     />
-    <SEO />
-     <MDXProvider components={shortcodes}>{children}</MDXProvider>
+    {children}
     <Footer />
   </React.Fragment>
 )

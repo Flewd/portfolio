@@ -1,37 +1,24 @@
-const kebabCase = require(`lodash.kebabcase`)
-const path = require(`path`)
-const withDefaults = require(`./utils/default-options`)
+import { mdxResolverPassthrough, slugify } from "@lekoarts/themes-utils"
+import path from "path"
+import { createRequire } from "module"
+import { withDefaults } from "./utils/default-options.mjs"
 
-const mdxResolverPassthrough = (fieldName) => async (source, args, context, info) => {
-  const type = info.schema.getType(`Mdx`)
-  const mdxNode = context.nodeModel.getNodeById({
-    id: source.parent,
-  })
-  const resolver = type.getFields()[fieldName].resolve
-  const result = await resolver(mdxNode, args, context, {
-    fieldName,
-  })
-  return result
-}
+const require = createRequire(import.meta.url)
 
 // Create general interfaces that you could can use to leverage other data sources
 // The core theme sets up MDX as a type for the general interface
-exports.createSchemaCustomization = ({ actions, schema }, themeOptions) => {
+export const createSchemaCustomization = ({ actions }, themeOptions) => {
   const { createTypes, createFieldExtension } = actions
 
   const { basePath } = withDefaults(themeOptions)
-
-  const slugify = (source) => {
-    const slug = source.slug ? source.slug : kebabCase(source.title)
-
-    return `/${basePath}/${slug}`.replace(/\/\/+/g, `/`)
-  }
 
   createFieldExtension({
     name: `slugify`,
     extend() {
       return {
-        resolve: slugify,
+        resolve(source) {
+          return slugify(source, basePath)
+        },
       }
     },
   })
@@ -48,34 +35,50 @@ exports.createSchemaCustomization = ({ actions, schema }, themeOptions) => {
     },
   })
 
+  createFieldExtension({
+    name: `defaultFalse`,
+    extend() {
+      return {
+        resolve(source, _args, _context, info) {
+          if (source[info.fieldName] == null) {
+            return false
+          }
+          return source[info.fieldName]
+        },
+      }
+    },
+  })
+
   createTypes(`
-    interface Project @nodeInterface {
+    interface Project implements Node {
       id: ID!
       title: String!
       slug: String! @slugify
+      defer: Boolean @defaultFalse
       date: Date! @dateformat
       areas: [String!]!
       cover: File! @fileByRelativePath
       excerpt(pruneLength: Int = 160): String!
-      body: String!
+      contentFilePath: String!
     }
-    
+
     type MdxProject implements Node & Project {
       title: String!
       slug: String! @slugify
+      defer: Boolean @defaultFalse
       date: Date! @dateformat
       areas: [String!]!
       cover: File! @fileByRelativePath
       excerpt(pruneLength: Int = 140): String! @mdxpassthrough(fieldName: "excerpt")
-      body: String! @mdxpassthrough(fieldName: "body")
+      contentFilePath: String!
     }
-    
+
     type EmiliaConfig implements Node {
       name: String
       location: String
       socialMedia: [socialMediaEntry!]
     }
-    
+
     type socialMediaEntry {
       title: String
       href: String
@@ -83,7 +86,7 @@ exports.createSchemaCustomization = ({ actions, schema }, themeOptions) => {
   `)
 }
 
-exports.onCreateNode = ({ node, actions, getNode, createNodeId, createContentDigest }, themeOptions) => {
+export const onCreateNode = ({ node, actions, getNode, createNodeId, createContentDigest }, themeOptions) => {
   const { createNode, createParentChildLink } = actions
 
   const { projectsPath } = withDefaults(themeOptions)
@@ -107,6 +110,8 @@ exports.onCreateNode = ({ node, actions, getNode, createNodeId, createContentDig
       cover: node.frontmatter.cover,
       date: node.frontmatter.date,
       areas: node.frontmatter.areas,
+      defer: node.frontmatter.defer,
+      contentFilePath: fileNode.absolutePath,
     }
 
     const mdxProjectId = createNodeId(`${node.id} >>> MdxProject`)
@@ -129,14 +134,14 @@ exports.onCreateNode = ({ node, actions, getNode, createNodeId, createContentDig
   }
 }
 
-exports.sourceNodes = (
+export const sourceNodes = (
   { actions, createContentDigest },
   {
-    name = `LekoArts`,
+    name = `Mike Flood`,
     location = `Germany`,
     socialMedia = [
-      { title: `Twitter`, href: `https://twitter.com/lekoarts_de` },
-      { title: `Instagram`, href: `https://www.instagram.com/lekoarts.de/` },
+      { title: `Bluesky`, href: `https://bsky.app/profile/lekoarts.de` },
+      { title: `Homepage`, href: `https://www.lekoarts.de?utm_source=emilia&utm_medium=Theme` },
     ],
     showThemeAuthor = true,
     assetsPath = `content/assets`,
@@ -170,7 +175,7 @@ exports.sourceNodes = (
 const projectsTemplate = require.resolve(`./src/templates/projects-query.tsx`)
 const projectTemplate = require.resolve(`./src/templates/project-query.tsx`)
 
-exports.createPages = async ({ actions, graphql, reporter }, themeOptions) => {
+export const createPages = async ({ actions, graphql, reporter }, themeOptions) => {
   const { createPage } = actions
 
   const { basePath, formatString } = withDefaults(themeOptions)
@@ -181,31 +186,18 @@ exports.createPages = async ({ actions, graphql, reporter }, themeOptions) => {
   })
 
   const result = await graphql(`
-    query {
-      allProject(sort: { fields: date, order: DESC }) {
+    {
+      allProject(sort: { date: DESC }) {
         nodes {
           slug
-          ... on MdxProject {
-            parent {
-              ... on Mdx {
-                fileAbsolutePath
-              }
-            }
-          }
+          contentFilePath
           title
           cover {
             childImageSharp {
-              fluid(maxWidth: 770, quality: 90) {
-                aspectRatio
-                base64
-                src
-                srcSet
-                srcSetWebp
-                srcWebp
-                sizes
-              }
+              gatsbyImageData(width: 770, quality: 90, aspectRatio: 1.777778)
             }
           }
+          defer
         }
       }
     }
@@ -219,21 +211,20 @@ exports.createPages = async ({ actions, graphql, reporter }, themeOptions) => {
   const projects = result.data.allProject.nodes
 
   projects.forEach((project, index) => {
-    const { fileAbsolutePath } = project.parent
-
     const next = index === 0 ? null : projects[index - 1]
     const prev = index === projects.length - 1 ? null : projects[index + 1]
 
     createPage({
       path: project.slug,
-      component: projectTemplate,
+      component: `${projectTemplate}?__contentFilePath=${project.contentFilePath}`,
       context: {
         slug: project.slug,
-        absolutePathRegex: `/^${path.dirname(fileAbsolutePath)}/`,
+        absolutePathRegex: `/^${path.dirname(project.contentFilePath)}/`,
         prev,
         next,
         formatString,
       },
+      defer: project.defer,
     })
   })
 }

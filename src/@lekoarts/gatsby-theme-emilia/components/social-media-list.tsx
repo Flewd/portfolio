@@ -1,6 +1,7 @@
 /** @jsx jsx */
-import React from "react"
-import { jsx, Styled } from "theme-ui"
+import * as React from "react"
+import { jsx } from "theme-ui"
+import { Themed } from "@theme-ui/mdx"
 import useEmiliaConfig from "../hooks/use-emilia-config"
 
 const SocialMediaList = () => {
@@ -9,9 +10,9 @@ const SocialMediaList = () => {
   return (
     <React.Fragment>
       {socialMedia.map((entry) => (
-        <Styled.a key={entry.title} href={entry.href}>
+        <Themed.a key={entry.title} href={entry.href}>
           {entry.title}
-        </Styled.a>
+        </Themed.a>
       ))}
     </React.Fragment>
   )

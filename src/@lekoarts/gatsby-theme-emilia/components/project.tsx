@@ -1,77 +1,79 @@
 /** @jsx jsx */
+import type { HeadFC, PageProps } from "gatsby"
 import { jsx, Container } from "theme-ui"
 import { animated, useSpring, config } from "react-spring"
-import Img from "gatsby-image"
-import { ChildImageSharpFluid } from "../types"
+import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 import Layout from "./layout"
 import HeaderProject from "./header-project"
 import ProjectPagination from "./project-pagination"
-import SEO from "./seo"
+import Seo from "./seo"
 
-type ProjectProps = {
-  data: {
-    project: {
-      body: string
-      excerpt: string
-      date: string
-      slug: string
-      title: string
-      areas: string[]
-      cover: {
-        childImageSharp: {
-          resize: {
-            src: string
-          }
+export type EmiliaProjectProps = {
+  project: {
+    excerpt: string
+    date: string
+    slug: string
+    title: string
+    areas: string[]
+    cover: {
+      childImageSharp: {
+        resize: {
+          src: string
         }
       }
     }
-    images: {
-      nodes: {
-        name: string
-        childImageSharp: ChildImageSharpFluid
-      }[]
+  }
+  images: {
+    nodes: {
+      name: string
+      childImageSharp: {
+        gatsbyImageData: IGatsbyImageData
+      }
+    }[]
+  }
+}
+
+export type EmiliaProjectPageContext = {
+  prev: {
+    slug: string
+    contentFilePath: string
+    title: string
+    cover: {
+      childImageSharp: {
+        gatsbyImageData: IGatsbyImageData
+      }
     }
   }
-  pageContext: {
-    prev: {
-      slug: string
-      parent: {
-        fileAbsolutePath: string
-      }
-      title: string
-      cover: {
-        childImageSharp: ChildImageSharpFluid
-      }
-    }
-    next: {
-      slug: string
-      parent: {
-        fileAbsolutePath: string
-      }
-      title: string
-      cover: {
-        childImageSharp: ChildImageSharpFluid
+  next: {
+    slug: string
+    contentFilePath: string
+    title: string
+    cover: {
+      childImageSharp: {
+        gatsbyImageData: IGatsbyImageData
       }
     }
   }
 }
 
-const Project = ({ data: { project, images }, pageContext: { prev, next } }: ProjectProps) => {
+const Project: React.FC<React.PropsWithChildren<PageProps<EmiliaProjectProps, EmiliaProjectPageContext>>> = ({
+  data: { project, images },
+  pageContext: { prev, next },
+  children,
+}) => {
   const imageFade = useSpring({ config: config.slow, delay: 800, from: { opacity: 0 }, to: { opacity: 1 } })
 
   return (
     <Layout>
-      <SEO
-        title={project.title}
-        description={project.excerpt}
-        pathname={project.slug}
-        image={project.cover.childImageSharp.resize.src}
-      />
-      <HeaderProject title={project.title} description={project.body} areas={project.areas} date={project.date} />
-      <Container style={{maxWidth:'55em'}} sx={{ mt: [`-6rem`, `-6rem`, `-19rem`] }}>
+      <HeaderProject title={project.title} description={children} areas={project.areas} date={project.date} />
+      <Container sx={{ mt: [`-6rem`, `-6rem`, `-8rem`] }}>
         {images.nodes.map((image) => (
           <animated.div key={image.name} style={imageFade}>
-            <Img fluid={image.childImageSharp.fluid} alt={image.name} sx={{ mb: [4, 4, 2], boxShadow: `xl` }} />
+            <GatsbyImage
+              image={image.childImageSharp.gatsbyImageData}
+              alt={image.name}
+              sx={{ mb: [4, 4, 5], boxShadow: `xl` }}
+            />
           </animated.div>
         ))}
         <ProjectPagination prev={prev} next={next} />
@@ -81,3 +83,12 @@ const Project = ({ data: { project, images }, pageContext: { prev, next } }: Pro
 }
 
 export default Project
+
+export const Head: HeadFC<EmiliaProjectProps> = ({ data: { project } }) => (
+  <Seo
+    title={project.title}
+    description={project.excerpt}
+    pathname={project.slug}
+    image={project.cover.childImageSharp.resize.src}
+  />
+)
