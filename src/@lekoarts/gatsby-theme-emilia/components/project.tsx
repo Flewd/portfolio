@@ -65,14 +65,14 @@ const Project: React.FC<React.PropsWithChildren<PageProps<EmiliaProjectProps, Em
 
   return (
     <Layout>
-      <HeaderProject title={project.title} description={children} areas={project.areas} date={project.date} />
-      <Container sx={{ mt: [`-6rem`, `-6rem`, `-8rem`] }}>
+      <HeaderProject title={project.title} description={children} areas={project.areas} />
+      <Container sx={{ mt: [`-10rem`, `-10rem`, `-10rem`] }}>
         {images.nodes.map((image) => (
           <animated.div key={image.name} style={imageFade}>
             <GatsbyImage
               image={image.childImageSharp.gatsbyImageData}
               alt={image.name}
-              sx={{ mb: [4, 4, 5], boxShadow: `xl` }}
+              sx={{ mb: [2, 2, 2] }}
             />
           </animated.div>
         ))}

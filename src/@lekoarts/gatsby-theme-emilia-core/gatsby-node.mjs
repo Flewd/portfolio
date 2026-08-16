@@ -138,7 +138,7 @@ export const sourceNodes = (
   { actions, createContentDigest },
   {
     name = `Mike Flood`,
-    location = `Germany`,
+    location = `US`,
     socialMedia = [
       { title: `Bluesky`, href: `https://bsky.app/profile/lekoarts.de` },
       { title: `Homepage`, href: `https://www.lekoarts.de?utm_source=emilia&utm_medium=Theme` },

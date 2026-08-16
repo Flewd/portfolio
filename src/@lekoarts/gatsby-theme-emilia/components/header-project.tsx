@@ -8,12 +8,13 @@ import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 import HeaderBackground from "./header-background"
 import useEmiliaConfig from "../hooks/use-emilia-config"
 import Svg from "./svg"
+import Video from "../components/video-header"
 
 type HeaderProjectProps = {
   title: string
   areas: string[]
+  video?: string
   description?: string
-  date: string
 }
 
 type AvatarStaticQuery = {
@@ -24,7 +25,7 @@ type AvatarStaticQuery = {
   }
 }
 
-const HeaderProject = ({ title, areas, description = ``, date }: HeaderProjectProps) => {
+const HeaderProject = ({ title, areas, video = ``, description = `` }: HeaderProjectProps) => {
   const { name } = useEmiliaConfig()
   const avatar = useStaticQuery<AvatarStaticQuery>(graphql`
     query {
@@ -91,17 +92,30 @@ const HeaderProject = ({ title, areas, description = ``, date }: HeaderProjectPr
             <Heading as="h1" variant="styles.h1">
               {title}
             </Heading>
+              <b>{areas[1]}</b> 
           </animated.div>
           <animated.div style={infoProps}>
-            <Themed.p sx={{ mb: 0, mt: 4 }}>{date}</Themed.p>
-            <div>
-              {areas.map((area, index) => (
-                <React.Fragment key={area}>
-                  {index > 0 && `, `}
-                  {area}
-                </React.Fragment>
-              ))}
-            </div>
+            <Video
+                videoUrl={video}
+                videoTitle={title}
+                textItems={areas} 
+              />
+
+              <animated.div>
+                {/* <Styled.p sx={{ mb: 0, mt: 4 }}>{date}</Styled.p> */}
+                <ul>
+                  {areas.slice(2).map((item, index) => (
+                    <React.Fragment key={item}>
+                      
+                        <div style={{fontSize:21}}>
+                          <b>{item.replace(",", ":")}</b>
+                        </div>
+                      
+                    </React.Fragment>
+                  ))}
+                   </ul>
+            </animated.div>
+
             {description && (
               <div sx={{ maxWidth: `900px`, mx: `auto`, mt: 5, p: { textAlign: `left`, overflowWrap: `break-word` } }}>
                 {description}

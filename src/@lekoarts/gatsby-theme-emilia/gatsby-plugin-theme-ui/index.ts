@@ -89,7 +89,7 @@ const theme = merge(tailwind, {
       "--x-height-multiplier": 0.35,
     },
     h1: {
-      fontSize: [4, 5],
+      fontSize: [5, 6],
       mt: 2,
       color: `heading`,
     },
