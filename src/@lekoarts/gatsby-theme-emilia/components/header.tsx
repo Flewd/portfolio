@@ -108,13 +108,15 @@ const Header = () => {
             {` `}
             {location}
           </Flex>
+            <div data-testid="social-header" sx={{ mt: 4, mb: 4, a: { mx: 2 } }}>
+              <animated.div style={fadeLongProps}>
+                <SocialMediaList />
+              </animated.div>
+            </div>
+          <div style={{  maxWidth: '900px',  minWidth: '500px'}} sx={{ mt: 4, mb: 6, a: { mx: 2 } }}>
           <AboutMeMDX />
+          </div>
         </animated.div>
-        <div data-testid="social-header" sx={{ mt: 4, mb: 6, a: { mx: 2 } }}>
-          <animated.div style={fadeLongProps}>
-            <SocialMediaList />
-          </animated.div>
-        </div>
       </div>
     </Flex>
   )

@@ -92,7 +92,8 @@ const HeaderProject = ({ title, areas, video = ``, description = `` }: HeaderPro
             <Heading as="h1" variant="styles.h1">
               {title}
             </Heading>
-              <b>{areas[1]}</b> 
+              <b>{areas[1]}</b>
+              <div><b>{areas[2]}</b> </div>
           </animated.div>
           <animated.div style={infoProps}>
             <Video
@@ -104,7 +105,7 @@ const HeaderProject = ({ title, areas, video = ``, description = `` }: HeaderPro
               <animated.div>
                 {/* <Styled.p sx={{ mb: 0, mt: 4 }}>{date}</Styled.p> */}
                 <ul>
-                  {areas.slice(2).map((item, index) => (
+                  {areas.slice(3).map((item, index) => (
                     <React.Fragment key={item}>
                       
                         <div style={{fontSize:21}}>

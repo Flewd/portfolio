@@ -65,7 +65,7 @@ const config: GatsbyConfig = {
         name: `Mike Flood`,
         showThemeAuthor: true,
         formatString: 'MM/DD/YYYY',
-        location: 'Chicago',
+        location: 'Chicago, IL',
         socialMedia: [
           {
             title: 'Resume',
