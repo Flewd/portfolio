@@ -23,6 +23,7 @@ const VideoHeader = ({ videoUrl, videoTitle, textItems }: VideoHeaderProps) => {
 
   const infoProps = useSpring({ config: config.slow, delay: 500, from: { opacity: 0 }, to: { opacity: 1 } })
 
+  
   return (
     <animated.div style={{  maxWidth: '900px', /*border: '4px solid red', padding: '20px', */ overflow: 'hidden', }} sx={{ maxWidth: `900px`, mx: `auto`, mt: 5, p: { textAlign: `left` } }}>
 

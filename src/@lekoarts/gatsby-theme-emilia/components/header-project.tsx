@@ -96,12 +96,11 @@ const HeaderProject = ({ title, areas, video = ``, description = `` }: HeaderPro
               <div><b>{areas[2]}</b> </div>
           </animated.div>
           <animated.div style={infoProps}>
-            <Video
+              <Video
                 videoUrl={video}
                 videoTitle={title}
                 textItems={areas} 
               />
-
               <animated.div>
                 {/* <Styled.p sx={{ mb: 0, mt: 4 }}>{date}</Styled.p> */}
                 <ul>
