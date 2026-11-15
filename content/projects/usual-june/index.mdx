@@ -22,11 +22,15 @@ Fight monsters, talk to ghosts, and get to the bottom of a mystery threatening t
 Worked in a custom Unity ECS system to build up Usual June from an early prototype to a released game. Usual June is a 3rd person action adventure game with an even split of combat and narrative systems built in Unity.
 
 <div style={{ textAlign: "left" }}>
-- Built a dialog system that uses character and camera positions to show dynamic dialog bubbles in a 3d space.
-- Built a responsive and modular animation driven action combat system inspired by games like Bayonetta and Nier: Automata. Designers can markup specific frames with collision and combo flags within unity’s editor.
-- Worked with game director to architect, implement, and iterate on core gameplay systems and mechanics.
-- Implemented a 3d root motion driven character controller for players, NPCs, Enemies, Pathfinding.
-- Implemented packages such as FinalIK, AStar Pathfinding, Bakery Lightmapping.
-- Automatic tooling for Unity build shader stripping to reduce build times.
-- Worked with artists and designers to build Unity editor tools.
+ - Built a responsive and modular animation driven action combat system inspired by games like Bayonetta and Nier: Automata. Designers can markup specific frames with collision and combo flags within unity’s editor.
+ - Built a dialog system that uses character and camera positions to show dynamic dialog bubbles in a 3d space.
+ - Created a Motion Warp system that allows for root motion animations to play out while smoothly blending a character to a target position. The speed of the warp in game can be controlled from embedded maya data.
+ - Worked with our game director to architect, implement, and iterate on core gameplay systems and mechanics.
+ - Implemented a 3d root motion driven character controller for players, NPCs, Enemies and Pathfinding.
+ - Implemented packages such as FinalIK, AStar Pathfinding, Bakery Lightmapping.
+ - Made a Unity plugin that downloads cutscene scripts from a 3rd party script writing tool called Scripto so they can be compiled into gameplay code.
+ - Build automatic tooling for Unity shader stripping to reduce build times and shader memory consumption.
+ - Profiled and optimized gameplay performance for lower end hardware.
+ - Worked with artists and designers to build Unity editor tools to streamline lightmap baking, VFX & SFX triggers, shader driven animations, Asset import pipelines.
+ - Created a tool where writers and designers can run cutscenes directly in Unity's edit mode to speed up cutscene iteration times.
 </div>

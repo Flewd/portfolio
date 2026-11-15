@@ -11,7 +11,7 @@ const config: GatsbyConfig = {
     siteTitle: `Mike Flood's Game Development Portfolio`,
     siteTitleAlt: `Mike Flood's Game Development Portfolio`,
     siteHeadline: `Mike Flood`,
-    siteUrl: `https://mike-flood.com`,
+    siteUrl: `https://mikeflood.games/`,
     siteDescription: `Mike Flood's Game Development Portfolio`,
     siteImage: `/banner.jpg`,
     siteLanguage: `en`,
@@ -69,7 +69,11 @@ const config: GatsbyConfig = {
         socialMedia: [
           {
             title: 'Resume',
-            href: 'https://drive.google.com/file/d/1Y4lS-cI8iUsy_Cz8Ep4hda-_6qFItyQE/view?usp=sharing'
+            href: 'https://docs.google.com/document/d/1Ww7UL7tN89EFf67DagqtO4dERjkgh2N1IaxoCKg4Sj4/edit?usp=sharing'
+          },
+          {
+            title: 'Resume PDF',
+            href: 'https://drive.google.com/file/d/1xsgBLnxUAIRxdX8HSizPQP_F-IWnOWYm/view?usp=drive_link'
           },
           {
             title: 'Itch.io',
