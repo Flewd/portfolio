@@ -73,7 +73,7 @@ const config: GatsbyConfig = {
           },
           {
             title: 'Resume PDF',
-            href: 'https://drive.google.com/file/d/1xsgBLnxUAIRxdX8HSizPQP_F-IWnOWYm/view?usp=drive_link'
+            href: 'https://drive.google.com/file/d/1aavQx_F-Xv_1idxg0kdtcpqDoIYS6vu_/view?usp=sharing'
           },
           {
             title: 'Itch.io',
